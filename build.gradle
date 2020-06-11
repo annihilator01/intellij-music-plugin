@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.21'
 }
 
-group 'com.dubrovskii.intellijmusicplugin'
+group 'com.dubrovskii'
 version '0.1.0'
 
 sourceCompatibility = 1.8
@@ -18,7 +18,7 @@ dependencies {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version '2019.3.2'
+    version '2020.1'
 }
 patchPluginXml {
     changeNotes """

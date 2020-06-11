@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>com.dubrovskii.intellijmusicplugin.intellij-music-plugin</id>
+    <id>com.dubrovskii.intellijmusicplugin</id>
     <name>Plugin display name here</name>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
