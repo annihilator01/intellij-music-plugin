@@ -8,9 +8,14 @@ public class Playlist {
     private String title;
     private ArrayList<Track> tracks;
 
-    Playlist(String title) {
+    public Playlist(String title) {
         this.title = title;
         this.tracks = new ArrayList<>();
+    }
+
+    public Playlist(Playlist otherPlaylist) {
+        this.title = otherPlaylist.title;
+        this.tracks = new ArrayList<>(otherPlaylist.tracks);
     }
 
     public String getTitle() {
