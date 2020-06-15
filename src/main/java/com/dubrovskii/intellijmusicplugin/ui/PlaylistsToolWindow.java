@@ -13,6 +13,7 @@ import javax.swing.tree.TreeModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PlaylistsToolWindow {
 
@@ -24,7 +25,9 @@ public class PlaylistsToolWindow {
     private JButton pauseResumeButton;
     private JButton previousTrackButton;
     private JButton nextTrackButton;
-    private JLabel currentTrack;
+    private JLabel currentTrackLabel;
+
+    private PlayerGUI player;
 
     private PlaylistsPersistentStateComponent playlistsService;
 
@@ -33,6 +36,10 @@ public class PlaylistsToolWindow {
     }
 
     private void init() {
+        // player
+        player = PlayerGUI.getInstance();
+        player.setInfoLabel(currentTrackLabel);
+
         // playlists
         ArrayList<Playlist> playlists = null;
 
@@ -41,9 +48,9 @@ public class PlaylistsToolWindow {
             playlists = playlistsService.getPersistedPlaylists();
         }
 
-        //playlistTree.setPlaylistTreeModel(playlists);
-        playlistTree.setModel(getTreeModel()); // test
+        playlistTree.setPlaylistTreeModel(playlists);
         playlistTree.setRootVisible(false);
+        //playlistTree.setModel(getTreeModel()); // test
         playlistTree.setDefaultPlaylistTreeCellRenderer();
         playlistTree.setDefaultPlaylistMouseListener();
         playlistTree.refreshPlaylistsTracks();
@@ -57,6 +64,10 @@ public class PlaylistsToolWindow {
 
         addListenerToAddPlaylistButton();
         addListenerToRefreshPlaylistButton();
+
+        addListenerToResumeButton();
+        addListenerToNextTrackButton();
+        addListenerTpPreviousTrackButton();
     }
 
     public void addListenerToAddPlaylistButton() {
@@ -65,11 +76,20 @@ public class PlaylistsToolWindow {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     String title = Messages.showInputDialog("Input title of the playlist", "Add Playlist", Messages.getInformationIcon());
+
+                    if (title == null || title.equals("")) {
+                        return;
+                    }
+
                     Playlist newPlaylist = new Playlist(title);
 
                     DefaultTreeModel treeModel = (DefaultTreeModel) playlistTree.getModel();
                     DefaultMutableTreeNode root = (DefaultMutableTreeNode) treeModel.getRoot();
                     treeModel.insertNodeInto(new DefaultMutableTreeNode(newPlaylist), root, root.getChildCount());
+
+                    if (root.getChildCount() == 1) {
+                        treeModel.reload();
+                    }
                 }
             }
         });
@@ -81,6 +101,47 @@ public class PlaylistsToolWindow {
             public void mouseClicked(MouseEvent e) {
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     playlistTree.refreshPlaylistsTracks();
+                }
+            }
+        });
+    }
+
+    public void addListenerToResumeButton() {
+        pauseResumeButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    if (player.isPaused() == 0) {
+                        player.pause();
+                    } else if (player.isPaused() == 1) {
+                        player.resume();
+                    } else if (player.isPaused() == 2) {
+                        if (player.isAbleToPlay()) {
+                            player.play();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    public void addListenerToNextTrackButton() {
+        nextTrackButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    player.playNext();
+                }
+            }
+        });
+    }
+
+    public void addListenerTpPreviousTrackButton() {
+        previousTrackButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    player.playPrevious();
                 }
             }
         });

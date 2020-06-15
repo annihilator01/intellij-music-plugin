@@ -1,5 +1,6 @@
 package com.dubrovskii.intellijmusicplugin.logic;
 
+import com.dubrovskii.intellijmusicplugin.ui.PlayerGUI;
 import com.dubrovskii.intellijmusicplugin.ui.PlaylistTree;
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.Messages;
@@ -73,19 +74,7 @@ public class Track implements HavingPopup {
 
     @Override
     public String toString() {
-        if (!author.equals("") && !title.equals("")) {
-            return author + " - " + title;
-        }
-
-        if (author.equals("") && !title.equals("")) {
-            return title;
-        }
-
-        if (!author.equals("")) {
-            return author;
-        }
-
-        return "Unknown";
+        return fileName;
     }
 
     @Override
@@ -124,7 +113,16 @@ public class Track implements HavingPopup {
 
     private void addActionListenerToPlayItem(JMenuItem playTrack, PlaylistTree contextTree) {
         playTrack.addActionListener(ae -> {
+            DefaultMutableTreeNode trackNode = contextTree.getSelectedNode();
+            DefaultMutableTreeNode playlistNode = (DefaultMutableTreeNode) trackNode.getParent();
 
+            Track track = (Track) trackNode.getUserObject();
+            Playlist playlist = (Playlist) playlistNode.getUserObject();
+
+            PlayerGUI player = PlayerGUI.getInstance();
+            player.loadPlaylist(playlist);
+            player.setCurrentTrackId(playlist.getAllTracks().indexOf(track));
+            player.play();
         });
     }
 
