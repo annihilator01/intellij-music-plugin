@@ -1,0 +1,17 @@
+<idea-plugin>
+    <id>com.dubrovskii.intellijmusicplugin</id>
+    <name>Musico</name>
+    <vendor email="iliadubrovskii01@gmail.com" url="https://github.com/annihilator01">Dubrovskii</vendor>
+
+    <description><![CDATA[
+    This plugin lets you listen to the music you store on your computer.
+    ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Musico" icon="/icons/toolWindow.svg" anchor="left"
+                    factoryClass="com.dubrovskii.intellijmusicplugin.ui.PlaylistToolWindowFactory"/>
+        <applicationService serviceImplementation="com.dubrovskii.intellijmusicplugin.logic.PlaylistsPersistentStateComponent"/>
+    </extensions>
+</idea-plugin>
