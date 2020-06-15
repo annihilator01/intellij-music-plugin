@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistsConverter extends Converter<ArrayList<Playlist>> {
+
     @Nullable
     @Override
     public ArrayList<Playlist> fromString(@NotNull String jsonString) {
@@ -23,12 +24,12 @@ public class PlaylistsConverter extends Converter<ArrayList<Playlist>> {
             List<LinkedTreeMap> tracks = ((List<LinkedTreeMap>) playlist.get("tracks"));
             for (LinkedTreeMap track : tracks) {
                 String absolutePath = ((String) track.get("absolutePath"));
-                String trackTitle = ((String) track.get("title"));
                 String author = ((String) track.get("author"));
-                int lengthInBytes = ((Number) track.get("lengthInBytes")).intValue();
+                String trackTitle = ((String) track.get("title"));
                 int lengthInMilliseconds = ((Number) track.get("lengthInMilliseconds")).intValue();
+                int lengthInBytes = ((Number) track.get("lengthInBytes")).intValue();
 
-                finalPlaylist.addTrack(new Track(absolutePath, trackTitle, author, lengthInBytes, lengthInMilliseconds));
+                finalPlaylist.addTrack(new Track(absolutePath, author, trackTitle, lengthInMilliseconds, lengthInBytes));
             }
 
             finalPlaylists.add(finalPlaylist);
